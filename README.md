@@ -106,6 +106,12 @@ AZURE_API_KEY  = "your-api-key"
 
 ---
 
+## Deployment link
+
+[![Live App](https://img.shields.io/badge/Live-App-brightgreen)](https://ankit-ocr-azure-vision.streamlit.app/)
+
+---
+
 ## 📸 Sample Output
 
 ```
