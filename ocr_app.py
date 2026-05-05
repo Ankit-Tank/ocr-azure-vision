@@ -126,6 +126,41 @@ section[data-testid="stSidebar"] {
     border-radius: 15px;
 }
 
+/* Hide Streamlit deploy button */
+[data-testid="stDecoration"] {
+    display: none;
+}
+
+/* Hide bottom-right profile icon */
+[data-testid="stStatusWidget"] {
+    display: none;
+}
+
+/* Hide Streamlit toolbar */
+button[kind="header"] {
+    display: none;
+}
+
+/* Hide fullscreen button */
+button[title="View fullscreen"] {
+    display: none;
+}
+
+/* Custom footer */
+.custom-footer {
+    text-align: center;
+    padding: 20px;
+    color: #94a3b8;
+    font-size: 15px;
+    margin-top: 50px;
+}
+
+.custom-footer a {
+    color: #60a5fa;
+    text-decoration: none;
+    font-weight: 600;
+}
+
 </style>
 """, unsafe_allow_html=True)
 
@@ -223,11 +258,13 @@ if uploaded_file:
 
     with col1:
         st.markdown('<div class="glass">', unsafe_allow_html=True)
+
         st.image(
             uploaded_file,
             caption="📷 Uploaded Image",
             use_container_width=True
         )
+
         st.markdown('</div>', unsafe_allow_html=True)
 
     with col2:
@@ -261,9 +298,7 @@ if uploaded_file:
                     api_key
                 )
 
-                # ─────────────────────────────────────────
                 # PROCESS OCR RESULTS
-                # ─────────────────────────────────────────
                 all_lines = []
                 all_words = []
                 json_data = []
@@ -302,9 +337,7 @@ if uploaded_file:
 
                 st.success("✅ OCR Completed Successfully!")
 
-                # ─────────────────────────────────────────
                 # METRICS
-                # ─────────────────────────────────────────
                 st.markdown("## 📊 OCR Analytics")
 
                 m1, m2, m3 = st.columns(3)
@@ -313,17 +346,13 @@ if uploaded_file:
                 m2.metric("Words Detected", len(all_words))
                 m3.metric("Avg Confidence", f"{avg_conf:.1%}")
 
-                # ─────────────────────────────────────────
                 # LOW CONFIDENCE WARNING
-                # ─────────────────────────────────────────
                 if low_conf:
                     st.warning(
                         f"⚠️ {len(low_conf)} low-confidence words detected."
                     )
 
-                # ─────────────────────────────────────────
                 # EXTRACTED TEXT
-                # ─────────────────────────────────────────
                 st.markdown("## 📄 Extracted Text")
 
                 full_text = "\n".join(all_lines)
@@ -335,9 +364,7 @@ if uploaded_file:
                     label_visibility="collapsed"
                 )
 
-                # ─────────────────────────────────────────
                 # WORD DETAILS
-                # ─────────────────────────────────────────
                 if show_words:
 
                     st.markdown("## 🔤 Word-Level Detail")
@@ -363,9 +390,7 @@ if uploaded_file:
                         use_container_width=True
                     )
 
-                # ─────────────────────────────────────────
                 # DOWNLOAD SECTION
-                # ─────────────────────────────────────────
                 st.markdown("## 💾 Download Results")
 
                 d1, d2 = st.columns(2)
@@ -393,3 +418,18 @@ if uploaded_file:
 
 else:
     st.info("👆 Upload an image to start OCR processing.")
+
+# ─────────────────────────────────────────
+# CUSTOM FOOTER
+# ─────────────────────────────────────────
+st.markdown(
+    """
+    <div class="custom-footer">
+        Made with ❤️ by 
+        <a href="https://github.com/Ankit-Tank" target="_blank">
+        Ankit-Tank
+        </a>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
