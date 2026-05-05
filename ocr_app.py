@@ -27,10 +27,53 @@ st.markdown("""
     color: white;
 }
 
-/* Hide Streamlit branding */
-#MainMenu {visibility: hidden;}
-footer {visibility: hidden;}
-header {visibility: hidden;}
+/* Hide Streamlit default elements */
+#MainMenu {
+    visibility: hidden;
+}
+
+footer {
+    visibility: hidden;
+}
+
+header {
+    visibility: hidden;
+}
+
+/* Remove top blank header space */
+[data-testid="stHeader"] {
+    display: none;
+}
+
+/* Remove toolbar */
+[data-testid="stToolbar"] {
+    display: none;
+}
+
+/* Remove deploy button */
+[data-testid="stDecoration"] {
+    display: none;
+}
+
+/* Remove bottom-right profile/deploy icons */
+[data-testid="stStatusWidget"] {
+    display: none !important;
+}
+
+/* Remove floating button container */
+.st-emotion-cache-1dp5vir {
+    display: none !important;
+}
+
+/* Remove fullscreen buttons */
+button[title="View fullscreen"] {
+    display: none;
+}
+
+/* Remove extra top padding */
+.block-container {
+    padding-top: 1rem !important;
+}
 
 /* Main title */
 .main-title {
@@ -124,26 +167,6 @@ section[data-testid="stSidebar"] {
 /* Info box */
 .stInfo {
     border-radius: 15px;
-}
-
-/* Hide Streamlit deploy button */
-[data-testid="stDecoration"] {
-    display: none;
-}
-
-/* Hide bottom-right profile icon */
-[data-testid="stStatusWidget"] {
-    display: none;
-}
-
-/* Hide Streamlit toolbar */
-button[kind="header"] {
-    display: none;
-}
-
-/* Hide fullscreen button */
-button[title="View fullscreen"] {
-    display: none;
 }
 
 /* Custom footer */
@@ -298,7 +321,6 @@ if uploaded_file:
                     api_key
                 )
 
-                # PROCESS OCR RESULTS
                 all_lines = []
                 all_words = []
                 json_data = []
@@ -346,7 +368,6 @@ if uploaded_file:
                 m2.metric("Words Detected", len(all_words))
                 m3.metric("Avg Confidence", f"{avg_conf:.1%}")
 
-                # LOW CONFIDENCE WARNING
                 if low_conf:
                     st.warning(
                         f"⚠️ {len(low_conf)} low-confidence words detected."
