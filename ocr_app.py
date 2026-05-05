@@ -5,7 +5,7 @@ import os
 from azure.cognitiveservices.vision.computervision import ComputerVisionClient
 from azure.cognitiveservices.vision.computervision.models import OperationStatusCodes
 from msrest.authentication import CognitiveServicesCredentials
-
+ 
 # ─────────────────────────────────────────
 # PAGE CONFIG
 # ─────────────────────────────────────────
@@ -14,10 +14,10 @@ st.set_page_config(
     page_icon="🔍",
     layout="centered"
 )
-
+ 
 st.title("🔍 OCR — Azure Computer Vision")
 st.markdown("Upload an image and extract all text from it instantly.")
-
+ 
 # ─────────────────────────────────────────
 # SIDEBAR — Azure Credentials
 # ─────────────────────────────────────────
@@ -36,29 +36,29 @@ with st.sidebar:
     st.markdown("---")
     show_words = st.checkbox("Show word-level detail", value=False)
     show_bbox  = st.checkbox("Show bounding boxes", value=False)
-
+ 
 # ─────────────────────────────────────────
 # OCR FUNCTION
 # ─────────────────────────────────────────
 def run_ocr(image_bytes, endpoint, api_key):
     client = ComputerVisionClient(endpoint, CognitiveServicesCredentials(api_key))
-
+ 
     import io
     response = client.read_in_stream(io.BytesIO(image_bytes), raw=True)
     operation_id = response.headers["Operation-Location"].split("/")[-1]
-
+ 
     for _ in range(30):  # timeout after 30s
         result = client.get_read_result(operation_id)
         if result.status not in [OperationStatusCodes.running,
                                   OperationStatusCodes.not_started]:
             break
         time.sleep(1)
-
+ 
     if result.status != OperationStatusCodes.succeeded:
         raise RuntimeError(f"OCR failed: {result.status}")
-
+ 
     return result
-
+ 
 # ─────────────────────────────────────────
 # MAIN UI — Upload Image
 # ─────────────────────────────────────────
@@ -66,7 +66,7 @@ uploaded_file = st.file_uploader(
     "Upload Image",
     type=["png", "jpg", "jpeg", "bmp", "tiff", "gif"]
 )
-
+ 
 if uploaded_file:
     col1, col2 = st.columns(2)
     with col1:
@@ -75,7 +75,7 @@ if uploaded_file:
         st.markdown(f"**File:** `{uploaded_file.name}`")
         st.markdown(f"**Size:** `{uploaded_file.size / 1024:.1f} KB`")
         run_btn = st.button("▶️ Run OCR", type="primary", use_container_width=True)
-
+ 
     if run_btn:
         if not endpoint or not api_key:
             st.error("Please fill in your Azure Endpoint and API Key in the sidebar.")
@@ -84,12 +84,12 @@ if uploaded_file:
                 try:
                     image_bytes = uploaded_file.read()
                     result = run_ocr(image_bytes, endpoint, api_key)
-
+ 
                     # ── Collect results ──
                     all_lines = []
                     all_words = []
                     json_data = []
-
+ 
                     for page in result.analyze_result.read_results:
                         for line in page.lines:
                             all_lines.append(line.text)
@@ -104,27 +104,27 @@ if uploaded_file:
                                     for w in line.words
                                 ]
                             })
-
+ 
                     avg_conf = sum(w.confidence for w in all_words) / len(all_words) if all_words else 0
                     low_conf = [w for w in all_words if w.confidence < 0.7]
-
+ 
                     st.success("✅ OCR Complete!")
-
+ 
                     # ── Stats ──
                     m1, m2, m3 = st.columns(3)
                     m1.metric("Lines", len(all_lines))
                     m2.metric("Words", len(all_words))
                     m3.metric("Avg Confidence", f"{avg_conf:.1%}")
-
+ 
                     if low_conf:
                         st.warning(f"⚠️ {len(low_conf)} low-confidence word(s) detected (< 70%): "
                                    + ", ".join(f"'{w.text}'" for w in low_conf))
-
+ 
                     # ── Extracted Text ──
                     st.markdown("### 📄 Extracted Text")
                     full_text = "\n".join(all_lines)
                     st.text_area("", value=full_text, height=250, label_visibility="collapsed")
-
+ 
                     # ── Word-level detail ──
                     if show_words:
                         st.markdown("### 🔤 Word-Level Detail")
@@ -137,7 +137,7 @@ if uploaded_file:
                                         row["Bounding Box"] = str(w.bounding_box)
                                     rows.append(row)
                         st.dataframe(rows, use_container_width=True)
-
+ 
                     # ── Download buttons ──
                     st.markdown("### 💾 Download Results")
                     d1, d2 = st.columns(2)
@@ -155,7 +155,7 @@ if uploaded_file:
                         mime="application/json",
                         use_container_width=True
                     )
-
+ 
                 except Exception as e:
                     st.error(f"❌ Error: {e}")
 else:
