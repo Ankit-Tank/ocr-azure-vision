@@ -329,7 +329,7 @@ def run_ocr(image_bytes):
 st.markdown(
 """
 <div class="main-title">
-⚡ OCR AI
+⚡OCR AI
 </div>
 
 <div class="sub">
