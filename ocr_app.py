@@ -10,447 +10,330 @@ from msrest.authentication import CognitiveServicesCredentials
 # PAGE CONFIG
 # ─────────────────────────────────────────
 st.set_page_config(
-    page_title="AI OCR Scanner",
+    page_title="OCR Vision",
     page_icon="🔍",
-    layout="wide"
+    layout="wide",
+    initial_sidebar_state="collapsed"
 )
 
 # ─────────────────────────────────────────
-# CUSTOM UI STYLING
+# CUSTOM CSS FOR MODERN UI
 # ─────────────────────────────────────────
 st.markdown("""
 <style>
-
-/* Main background */
-.stApp {
-    background: linear-gradient(135deg, #0f172a, #111827);
-    color: white;
-}
-
-/* Hide Streamlit default elements */
-#MainMenu {
-    visibility: hidden;
-}
-
-footer {
-    visibility: hidden;
-}
-
-header {
-    visibility: hidden;
-}
-
-/* Remove top blank header space */
-[data-testid="stHeader"] {
-    display: none;
-}
-
-/* Remove toolbar */
-[data-testid="stToolbar"] {
-    display: none;
-}
-
-/* Remove deploy button */
-[data-testid="stDecoration"] {
-    display: none;
-}
-
-/* Remove bottom-right profile/deploy icons */
-[data-testid="stStatusWidget"] {
-    display: none !important;
-}
-
-/* Remove floating button container */
-.st-emotion-cache-1dp5vir {
-    display: none !important;
-}
-
-/* Remove fullscreen buttons */
-button[title="View fullscreen"] {
-    display: none;
-}
-
-/* Remove extra top padding */
-.block-container {
-    padding-top: 1rem !important;
-}
-
-/* Main title */
-.main-title {
-    font-size: 3.5rem;
-    font-weight: 800;
-    text-align: center;
-    background: linear-gradient(to right, #38bdf8, #818cf8);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    margin-top: 10px;
-    margin-bottom: 10px;
-}
-
-/* Subtitle */
-.sub-text {
-    text-align: center;
-    color: #cbd5e1;
-    font-size: 1.2rem;
-    margin-bottom: 2rem;
-}
-
-/* Glassmorphism Card */
-.glass {
-    background: rgba(255,255,255,0.08);
-    border: 1px solid rgba(255,255,255,0.12);
-    padding: 25px;
-    border-radius: 20px;
-    backdrop-filter: blur(14px);
-    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-    margin-bottom: 25px;
-}
-
-/* Buttons */
-.stButton>button {
-    width: 100%;
-    border-radius: 12px;
-    height: 3rem;
-    border: none;
-    font-size: 1rem;
-    font-weight: 700;
-    background: linear-gradient(to right, #3b82f6, #8b5cf6);
-    color: white;
-    transition: 0.3s;
-}
-
-.stButton>button:hover {
-    transform: scale(1.03);
-    box-shadow: 0 0 20px rgba(99,102,241,0.5);
-}
-
-/* Upload box */
-[data-testid="stFileUploader"] {
-    background: rgba(255,255,255,0.06);
-    border-radius: 20px;
-    padding: 20px;
-    border: 2px dashed #6366f1;
-}
-
-/* Text area */
-.stTextArea textarea {
-    background-color: #111827 !important;
-    color: white !important;
-    border-radius: 15px !important;
-    border: 1px solid #374151 !important;
-}
-
-/* Metrics */
-[data-testid="metric-container"] {
-    background: rgba(255,255,255,0.08);
-    border: 1px solid rgba(255,255,255,0.1);
-    padding: 20px;
-    border-radius: 18px;
-}
-
-/* Sidebar */
-section[data-testid="stSidebar"] {
-    background: #0f172a;
-}
-
-/* Dataframe */
-[data-testid="stDataFrame"] {
-    border-radius: 15px;
-    overflow: hidden;
-}
-
-/* Success box */
-.stSuccess {
-    border-radius: 15px;
-}
-
-/* Info box */
-.stInfo {
-    border-radius: 15px;
-}
-
-/* Custom footer */
-.custom-footer {
-    text-align: center;
-    padding: 20px;
-    color: #94a3b8;
-    font-size: 15px;
-    margin-top: 50px;
-}
-
-.custom-footer a {
-    color: #60a5fa;
-    text-decoration: none;
-    font-weight: 600;
-}
-
+    /* Main background gradient */
+    .stApp {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    
+    /* Main container */
+    .main .block-container {
+        padding-top: 2rem;
+        padding-bottom: 2rem;
+        max-width: 1200px;
+    }
+    
+    /* Custom card styling */
+    .upload-card {
+        background: rgba(255, 255, 255, 0.95);
+        padding: 2.5rem;
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        backdrop-filter: blur(10px);
+    }
+    
+    /* Title styling */
+    .custom-title {
+        font-size: 3rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-align: center;
+        margin-bottom: 0.5rem;
+    }
+    
+    .custom-subtitle {
+        text-align: center;
+        color: #ffffff;
+        font-size: 1.2rem;
+        margin-bottom: 2rem;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+    
+    /* Button styling */
+    .stButton > button {
+        width: 100%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        padding: 0.75rem 2rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        transition: all 0.3s ease;
+    }
+    
+    .stButton > button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    }
+    
+    /* Download buttons */
+    .stDownloadButton > button {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        border-radius: 10px;
+    }
+    
+    /* Metrics */
+    [data-testid="stMetricValue"] {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #667eea;
+    }
+    
+    /* File uploader */
+    [data-testid="stFileUploader"] {
+        background: white;
+        padding: 2rem;
+        border-radius: 15px;
+        border: 2px dashed #667eea;
+    }
+    
+    /* Success/Warning messages */
+    .stSuccess {
+        background-color: rgba(40, 167, 69, 0.1);
+        border-left: 4px solid #28a745;
+        border-radius: 8px;
+    }
+    
+    .stWarning {
+        background-color: rgba(255, 193, 7, 0.1);
+        border-left: 4px solid #ffc107;
+        border-radius: 8px;
+    }
+    
+    /* Sidebar */
+    [data-testid="stSidebar"] {
+        background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+    }
+    
+    [data-testid="stSidebar"] .css-1d391kg {
+        color: white;
+    }
+    
+    /* Text area */
+    .stTextArea textarea {
+        border-radius: 10px;
+        border: 2px solid #e0e0e0;
+        font-family: 'Courier New', monospace;
+    }
+    
+    /* Dataframe */
+    .dataframe {
+        border-radius: 10px;
+        overflow: hidden;
+    }
 </style>
 """, unsafe_allow_html=True)
 
 # ─────────────────────────────────────────
-# HEADER
+# 🔐 LOAD CREDENTIALS SECURELY
 # ─────────────────────────────────────────
-st.markdown(
-    """
-    <div class="main-title">🔍 AI OCR Scanner</div>
-    <div class="sub-text">
-        Upload images and extract text instantly using Azure AI Vision
-    </div>
-    """,
-    unsafe_allow_html=True
-)
+try:
+    endpoint = st.secrets["AZURE_ENDPOINT"]
+    api_key = st.secrets["AZURE_API_KEY"]
+except Exception:
+    st.error("⚠️ Azure credentials not configured. Please add them to Streamlit Secrets.")
+    st.info("Go to: Settings → Secrets → Add AZURE_ENDPOINT and AZURE_API_KEY")
+    st.stop()
 
 # ─────────────────────────────────────────
 # SIDEBAR
 # ─────────────────────────────────────────
 with st.sidebar:
-    st.markdown("## ⚙️ OCR Settings")
-
-    show_words = st.checkbox("Show word-level detail", value=False)
-    show_bbox = st.checkbox("Show bounding boxes", value=False)
-
+    st.markdown("### ⚙️ Settings")
+    show_words = st.checkbox("📝 Show word-level detail", value=False)
+    show_bbox = st.checkbox("📐 Show bounding boxes", value=False)
+    
     st.markdown("---")
-
+    st.markdown("### 🔐 Security")
+    st.success("✅ Credentials loaded securely from Streamlit Secrets")
+    
+    st.markdown("---")
+    st.markdown("### ℹ️ About")
     st.markdown("""
-    ### 🚀 Features
-    ✅ Fast OCR  
-    ✅ AI Text Extraction  
-    ✅ JSON Download  
-    ✅ TXT Download  
-    ✅ Confidence Analysis  
+    This app uses **Azure Computer Vision** to extract text from images using OCR technology.
+    
+    **Features:**
+    - 📸 Upload any image
+    - 🔤 Extract all text
+    - 📊 Confidence scores
+    - 💾 Export as TXT/JSON
     """)
-
-# ─────────────────────────────────────────
-# SECURE CREDENTIALS
-# ─────────────────────────────────────────
-endpoint = st.secrets["AZURE_ENDPOINT"]
-api_key = st.secrets["AZURE_API_KEY"]
 
 # ─────────────────────────────────────────
 # OCR FUNCTION
 # ─────────────────────────────────────────
 def run_ocr(image_bytes, endpoint, api_key):
-    client = ComputerVisionClient(
-        endpoint,
-        CognitiveServicesCredentials(api_key)
-    )
-
+    client = ComputerVisionClient(endpoint, CognitiveServicesCredentials(api_key))
+    
     import io
-
-    response = client.read_in_stream(
-        io.BytesIO(image_bytes),
-        raw=True
-    )
-
+    response = client.read_in_stream(io.BytesIO(image_bytes), raw=True)
     operation_id = response.headers["Operation-Location"].split("/")[-1]
-
+    
     for _ in range(30):
         result = client.get_read_result(operation_id)
-
-        if result.status not in [
-            OperationStatusCodes.running,
-            OperationStatusCodes.not_started
-        ]:
+        if result.status not in [OperationStatusCodes.running,
+                                  OperationStatusCodes.not_started]:
             break
-
         time.sleep(1)
-
+    
     if result.status != OperationStatusCodes.succeeded:
         raise RuntimeError(f"OCR failed: {result.status}")
-
+    
     return result
 
 # ─────────────────────────────────────────
-# FILE UPLOAD
+# HEADER
 # ─────────────────────────────────────────
-st.markdown('<div class="glass">', unsafe_allow_html=True)
+st.markdown('<h1 class="custom-title">🔍 OCR Vision</h1>', unsafe_allow_html=True)
+st.markdown('<p class="custom-subtitle">Extract text from images instantly using AI-powered OCR</p>', unsafe_allow_html=True)
 
+# ─────────────────────────────────────────
+# MAIN CONTENT
+# ─────────────────────────────────────────
 uploaded_file = st.file_uploader(
-    "📤 Upload Image",
-    type=["png", "jpg", "jpeg", "bmp", "tiff", "gif"]
+    "📤 Drop your image here or click to browse",
+    type=["png", "jpg", "jpeg", "bmp", "tiff", "gif"],
+    label_visibility="collapsed"
 )
 
-st.markdown('</div>', unsafe_allow_html=True)
-
-# ─────────────────────────────────────────
-# OCR PROCESS
-# ─────────────────────────────────────────
 if uploaded_file:
-
-    col1, col2 = st.columns([1.2, 1])
-
+    st.markdown("---")
+    
+    # Image preview and info
+    col1, col2 = st.columns([1, 1])
+    
     with col1:
-        st.markdown('<div class="glass">', unsafe_allow_html=True)
-
-        st.image(
-            uploaded_file,
-            caption="📷 Uploaded Image",
-            use_container_width=True
-        )
-
-        st.markdown('</div>', unsafe_allow_html=True)
-
+        st.markdown("### 📸 Uploaded Image")
+        st.image(uploaded_file, use_container_width=True)
+    
     with col2:
-        st.markdown('<div class="glass">', unsafe_allow_html=True)
-
-        st.markdown(f"### 📄 File Details")
-        st.markdown(f"**Filename:** `{uploaded_file.name}`")
-        st.markdown(f"**Size:** `{uploaded_file.size / 1024:.2f} KB`")
-        st.markdown(f"**Type:** `{uploaded_file.type}`")
-
-        st.markdown("<br>", unsafe_allow_html=True)
-
-        run_btn = st.button(
-            "🚀 Run OCR",
-            type="primary",
-            use_container_width=True
-        )
-
-        st.markdown('</div>', unsafe_allow_html=True)
-
+        st.markdown("### 📋 File Details")
+        st.markdown(f"""
+        <div style='background: white; padding: 1.5rem; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);'>
+            <p style='margin: 0.5rem 0; font-size: 1.1rem;'><strong>📄 Name:</strong> {uploaded_file.name}</p>
+            <p style='margin: 0.5rem 0; font-size: 1.1rem;'><strong>📦 Size:</strong> {uploaded_file.size / 1024:.1f} KB</p>
+            <p style='margin: 0.5rem 0; font-size: 1.1rem;'><strong>🔖 Type:</strong> {uploaded_file.type}</p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        st.markdown("")
+        run_btn = st.button("🚀 Extract Text", type="primary", use_container_width=True)
+    
     if run_btn:
-
-        with st.spinner("🔍 AI is extracting text..."):
-
+        with st.spinner("🔄 Processing image with Azure Computer Vision..."):
             try:
                 image_bytes = uploaded_file.read()
-
-                result = run_ocr(
-                    image_bytes,
-                    endpoint,
-                    api_key
-                )
-
+                result = run_ocr(image_bytes, endpoint, api_key)
+                
+                # Collect results
                 all_lines = []
                 all_words = []
                 json_data = []
-
+                
                 for page in result.analyze_result.read_results:
                     for line in page.lines:
-
                         all_lines.append(line.text)
-
                         for word in line.words:
                             all_words.append(word)
-
                         json_data.append({
                             "line": line.text,
                             "words": [
-                                {
-                                    "word": w.text,
-                                    "confidence": round(w.confidence, 4),
-                                    "bounding_box": w.bounding_box
-                                }
+                                {"word": w.text,
+                                 "confidence": round(w.confidence, 4),
+                                 "bounding_box": w.bounding_box}
                                 for w in line.words
                             ]
                         })
-
-                avg_conf = (
-                    sum(w.confidence for w in all_words) / len(all_words)
-                    if all_words else 0
-                )
-
-                low_conf = [
-                    w for w in all_words
-                    if w.confidence < 0.7
-                ]
-
-                st.balloons()
-
-                st.success("✅ OCR Completed Successfully!")
-
-                # METRICS
-                st.markdown("## 📊 OCR Analytics")
-
+                
+                avg_conf = sum(w.confidence for w in all_words) / len(all_words) if all_words else 0
+                low_conf = [w for w in all_words if w.confidence < 0.7]
+                
+                st.markdown("---")
+                st.success("✅ Text extraction completed successfully!")
+                
+                # Stats
+                st.markdown("### 📊 Statistics")
                 m1, m2, m3 = st.columns(3)
-
-                m1.metric("Lines Extracted", len(all_lines))
-                m2.metric("Words Detected", len(all_words))
-                m3.metric("Avg Confidence", f"{avg_conf:.1%}")
-
+                m1.metric("📝 Lines", len(all_lines))
+                m2.metric("🔤 Words", len(all_words))
+                m3.metric("🎯 Avg Confidence", f"{avg_conf:.1%}")
+                
                 if low_conf:
-                    st.warning(
-                        f"⚠️ {len(low_conf)} low-confidence words detected."
-                    )
-
-                # EXTRACTED TEXT
-                st.markdown("## 📄 Extracted Text")
-
+                    st.warning(f"⚠️ **{len(low_conf)} low-confidence words detected (< 70%):** " 
+                              + ", ".join(f"`{w.text}`" for w in low_conf[:5]) 
+                              + ("..." if len(low_conf) > 5 else ""))
+                
+                # Extracted text
+                st.markdown("### 📄 Extracted Text")
                 full_text = "\n".join(all_lines)
-
-                st.text_area(
-                    "",
-                    value=full_text,
-                    height=300,
-                    label_visibility="collapsed"
-                )
-
-                # WORD DETAILS
+                st.text_area("", value=full_text, height=250, label_visibility="collapsed")
+                
+                # Word-level detail
                 if show_words:
-
-                    st.markdown("## 🔤 Word-Level Detail")
-
+                    st.markdown("### 🔤 Word-Level Analysis")
                     rows = []
-
                     for page in result.analyze_result.read_results:
                         for line in page.lines:
                             for w in line.words:
-
-                                row = {
-                                    "Word": w.text,
-                                    "Confidence": f"{w.confidence:.2%}"
-                                }
-
+                                row = {"Word": w.text, "Confidence": f"{w.confidence:.2%}"}
                                 if show_bbox:
                                     row["Bounding Box"] = str(w.bounding_box)
-
                                 rows.append(row)
-
-                    st.dataframe(
-                        rows,
-                        use_container_width=True
-                    )
-
-                # DOWNLOAD SECTION
-                st.markdown("## 💾 Download Results")
-
+                    st.dataframe(rows, use_container_width=True, height=400)
+                
+                # Download buttons
+                st.markdown("### 💾 Download Results")
                 d1, d2 = st.columns(2)
-
+                
                 with d1:
                     st.download_button(
-                        "⬇️ Download TXT",
+                        "📄 Download as TXT",
                         data=full_text,
                         file_name=f"{os.path.splitext(uploaded_file.name)[0]}_ocr.txt",
                         mime="text/plain",
                         use_container_width=True
                     )
-
+                
                 with d2:
                     st.download_button(
-                        "⬇️ Download JSON",
+                        "📋 Download as JSON",
                         data=json.dumps(json_data, indent=2),
                         file_name=f"{os.path.splitext(uploaded_file.name)[0]}_ocr.json",
                         mime="application/json",
                         use_container_width=True
                     )
-
+                
             except Exception as e:
-                st.error(f"❌ Error: {e}")
+                st.error(f"❌ **Error during OCR processing:** {str(e)}")
+                st.info("💡 Make sure your Azure credentials are correct and the service is active.")
 
 else:
-    st.info("👆 Upload an image to start OCR processing.")
-
-# ─────────────────────────────────────────
-# CUSTOM FOOTER
-# ─────────────────────────────────────────
-st.markdown(
-    """
-    <div class="custom-footer">
-        Made with ❤️ by 
-        <a href="https://github.com/Ankit-Tank" target="_blank">
-        Ankit-Tank
-        </a>
+    # Empty state
+    st.markdown("""
+    <div style='text-align: center; padding: 3rem; background: rgba(255,255,255,0.9); border-radius: 20px; margin-top: 2rem;'>
+        <h2 style='color: #667eea; margin-bottom: 1rem;'>👆 Upload an image to get started</h2>
+        <p style='color: #666; font-size: 1.1rem;'>Supported formats: PNG, JPG, JPEG, BMP, TIFF, GIF</p>
     </div>
-    """,
-    unsafe_allow_html=True
-)
+    """, unsafe_allow_html=True)
+
+# Footer
+st.markdown("---")
+st.markdown("""
+<div style='text-align: center; color: white; padding: 1rem;'>
+    <p>Powered by <strong>Azure Computer Vision</strong> | Built with ❤️ using Streamlit</p>
+</div>
+""", unsafe_allow_html=True)
