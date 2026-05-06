@@ -329,11 +329,11 @@ def run_ocr(image_bytes):
 st.markdown(
 """
 <div class="main-title">
-⚡ NEON OCR AI
+⚡ OCR AI
 </div>
 
 <div class="sub">
-FUTURISTIC TEXT EXTRACTION SYSTEM
+TEXT EXTRACTION SYSTEM
 </div>
 """,
 unsafe_allow_html=True
